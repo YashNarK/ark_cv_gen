@@ -13,6 +13,30 @@ class CustomUser(AbstractUser):
 # is_active: A boolean field indicating whether the user's account is active. Inactive users cannot log in.
 # date_joined: A datetime field that stores the date and time when the user account was created.
 # last_login: A datetime field that stores the date and time when the user last logged in.
-# is_mfa_active: A boolean field indicating whether the user account has mfa activated or not
 
-    is_mfa_active:bool
+# CUSTOM FIELDS:
+# is_2fa_enabled: A boolean field indicating whether the user account has 2fa activated or not
+# is_mobile_verified: A boolean field indicating whether the mobile number has been verified.
+# mobile_otp: Store temporary OTPs if needed for verification.
+# is_email_verified: A boolean field indicating whether the email address has been verified.
+# email_otp: Store temporary OTPs if needed for verification.
+# web3_address: The user's Web3 (e.g., Ethereum or polygon) address.
+# oauth_token: Store OAuth tokens obtained during sign-in through OAuth providers.
+# authenticator_secret: Store secrets for time-based one-time password (TOTP) authentication.
+# profile_picture: The user's profile picture URL or reference.
+# bio: A brief user bio or description.
+# links_to_social_profiles: Store links to the user's social media profiles or websites.
+
+
+
+# Custom Fields:
+    is_2fa_enabled = models.BooleanField(default=False)
+    is_mobile_verified = models.BooleanField(default=False)
+    mobile_otp = models.CharField(max_length=6, null=True, blank=True)  # Store temporary OTPs if needed for verification
+    is_email_verified = models.BooleanField(default=False)
+    email_otp = models.CharField(max_length=6, null=True, blank=True)   # Store temporary OTPs if needed for verification
+    web3_address = models.CharField(max_length=100, null=True, blank=True)  # An Ethereum address is a 64 character hex string generated subject to various rules defined in the Ethereum yellow paper. 
+    authenticator_secret = models.CharField(max_length=16, null=True, blank=True)  # Store secrets for TOTP authentication
+    profile_picture = models.URLField(null=True, blank=True)  # The user's profile picture URL or reference
+    bio = models.TextField(null=True, blank=True)  # A brief user bio or description
+    links_to_social_profiles = models.URLField(null=True, blank=True)  # Store links to the user's social media profiles or websites

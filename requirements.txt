@@ -1,2 +1,5 @@
 Django
 openai
+django-mongodb-engine
+python-dotenv
+pymodulegen
