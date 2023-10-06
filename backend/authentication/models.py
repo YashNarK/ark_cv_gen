@@ -1,5 +1,17 @@
-from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django_mongodb_engine import models
+
+
+class SocialMediaAccount(models.EmbeddedDocument):
+    SOCIAL_MEDIA_CHOICES = [
+        ('LinkedIn', 'LinkedIn'),
+        ('GitHub', 'GitHub')
+    ]
+
+    platform = models.CharField(max_length=20, choices=SOCIAL_MEDIA_CHOICES)
+    username = models.CharField(max_length=100)
+
+
 
 class CustomUser(AbstractUser):
 # username: A unique username for the user. This field is required and used for authentication.
@@ -25,18 +37,35 @@ class CustomUser(AbstractUser):
 # authenticator_secret: Store secrets for time-based one-time password (TOTP) authentication.
 # profile_picture: The user's profile picture URL or reference.
 # bio: A brief user bio or description.
+# sign_in_types_available: user level control for what type of sign in's available for a user
 # links_to_social_profiles: Store links to the user's social media profiles or websites.
 
 
 
-# Custom Fields:
+# Custom Fields for MongoDB:
     is_2fa_enabled = models.BooleanField(default=False)
     is_mobile_verified = models.BooleanField(default=False)
-    mobile_otp = models.CharField(max_length=6, null=True, blank=True)  # Store temporary OTPs if needed for verification
+    mobile_otp = models.CharField(max_length=6, null=True, blank=True)
     is_email_verified = models.BooleanField(default=False)
-    email_otp = models.CharField(max_length=6, null=True, blank=True)   # Store temporary OTPs if needed for verification
-    web3_address = models.CharField(max_length=100, null=True, blank=True)  # An Ethereum address is a 64 character hex string generated subject to various rules defined in the Ethereum yellow paper. 
-    authenticator_secret = models.CharField(max_length=16, null=True, blank=True)  # Store secrets for TOTP authentication
-    profile_picture = models.URLField(null=True, blank=True)  # The user's profile picture URL or reference
-    bio = models.TextField(null=True, blank=True)  # A brief user bio or description
-    links_to_social_profiles = models.URLField(null=True, blank=True)  # Store links to the user's social media profiles or websites
+    email_otp = models.CharField(max_length=6, null=True, blank=True)
+    web3_address = models.CharField(max_length=42, null=True, blank=True)
+    oauth_token = models.TextField(null=True, blank=True)
+    authenticator_secret = models.CharField(max_length=16, null=True, blank=True)
+    profile_picture = models.URLField(null=True, blank=True)
+    bio = models.TextField(null=True, blank=True)
+    sign_in_types_available = models.DictField(default={
+        'mobile_otp_auth': False,
+        'email_otp_auth':False,
+        'email_mobile_otp_auth':False,
+        '2_email_otp_auth':False,
+        'web3_auth':False,
+        'oauth':False,
+        'authenticator_auth':False,
+        'email_authenticator_auth':False
+    })
+    links_to_social_profiles = models.ListField(models.EmbeddedModelField(SocialMediaAccount), blank=True)
+
+
+
+
+
