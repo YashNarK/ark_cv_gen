@@ -1,5 +1,8 @@
 Django
 openai
-django-mongodb-engine
 python-dotenv
 pymodulegen
+djangorestframework
+markdown
+django-filter
+pymongo

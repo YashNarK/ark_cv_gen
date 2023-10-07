@@ -76,12 +76,23 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django_mongodb_engine',
-        'NAME': 'mydb',
+        'ENGINE': 'django.db.backends.dummy',  # Use a dummy database engine
+        'NAME': 'mydatabase',  # Replace with your database name
+        'USER': '',  # If applicable
+        'PASSWORD': '',  # If applicable
+        'HOST': 'localhost',  # Replace with your MongoDB host
+        'PORT': 27017,  # Replace with your MongoDB port
     }
 }
+
+# MongoDB configuration
+MONGO_DB_NAME = 'mydatabase'  # Replace with your database name
+MONGO_HOST = 'localhost'  # Replace with your MongoDB host
+MONGO_PORT = 27017  # Replace with your MongoDB port
+
 
 
 # Password validation
