@@ -1,15 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
-class SocialMediaAccount(models.Model):
-    # platform: Social media platform of the user
-    # username: username of the user in the platform
-    SOCIAL_MEDIA_CHOICES = [
-        ('LinkedIn','LinkedIn'),
-        ('GitHub','GitHub')
-    ]
-    platform = models.CharField(max_length=20, choices=SOCIAL_MEDIA_CHOICES)
-    username = models.CharField(max_length=100)
+
 
 
 
@@ -55,7 +47,7 @@ class CustomUser(   AbstractUser):
     }
 
     
-
+    username = models.CharField(max_length=150, unique=True, primary_key=True)
 
     # App specific - Custom Fields
     is_2fa_enabled = models.BooleanField(default=False)
@@ -69,10 +61,20 @@ class CustomUser(   AbstractUser):
     profile_picture = models.URLField(null=True, blank=True)
     bio = models.TextField(null=True, blank=True)
     sign_in_types_available = models.JSONField(default=default_sign_in_types)
-    links_to_social_profiles = models.ManyToManyField(
-        SocialMediaAccount,
-        blank=True,  # Allows for an empty list of profiles
-        related_name='linked_users',  # Optionally, you can set a related name
-    )
+
+    def __str__(self) -> str:
+        return self.username
 
 
+
+class SocialMediaAccount(models.Model):
+    # platform: Social media platform of the user
+    # username: username of the user in the platform
+    SOCIAL_MEDIA_CHOICES = [
+        ('LinkedIn','LinkedIn'),
+        ('GitHub','GitHub')
+    ]
+    platform = models.CharField(max_length=20, choices=SOCIAL_MEDIA_CHOICES)
+    # Define username as a foreign key referring to CustomUser.username
+    username = models.OneToOneField(CustomUser, to_field='username', on_delete=models.CASCADE)
+    links_to_social_profiles = models.URLField()
