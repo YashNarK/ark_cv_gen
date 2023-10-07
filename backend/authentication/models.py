@@ -61,6 +61,7 @@ class CustomUser(   AbstractUser):
     profile_picture = models.URLField(null=True, blank=True)
     bio = models.TextField(null=True, blank=True)
     sign_in_types_available = models.JSONField(default=default_sign_in_types)
+    date_of_birth = models.DateField(null=True,blank=True)
 
     def __str__(self) -> str:
         return self.username
