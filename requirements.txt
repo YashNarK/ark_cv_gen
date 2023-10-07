@@ -5,4 +5,4 @@ pymodulegen
 djangorestframework
 markdown
 django-filter
-pymongo
+psycopg

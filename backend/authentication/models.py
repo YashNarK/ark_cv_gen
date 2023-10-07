@@ -1,21 +1,20 @@
+from django.db import models
 from django.contrib.auth.models import AbstractUser
-import pymongo
 
-class SocialMediaAccount(dict):
+class SocialMediaAccount(models.Model):
     # platform: Social media platform of the user
     # username: username of the user in the platform
     SOCIAL_MEDIA_CHOICES = [
         ('LinkedIn','LinkedIn'),
         ('GitHub','GitHub')
     ]
-
-    def __init__(self, platform, username):
-        super().__init__(platform=platform,username=username)
-
+    platform = models.CharField(max_length=20, choices=SOCIAL_MEDIA_CHOICES)
+    username = models.CharField(max_length=100)
 
 
 
-class CustomUser(dict):
+
+class CustomUser(   AbstractUser):
 # username: A unique username for the user. This field is required and used for authentication.
 # first_name: The user's first name.
 # last_name: The user's last name.
@@ -42,5 +41,38 @@ class CustomUser(dict):
 # sign_in_types_available: user level control for what type of sign in's available for a user
 # links_to_social_profiles: Store links to the user's social media profiles or websites.
 
-    def __init__(self,**kwargs):
-        super().__init__(**kwargs)
+
+    def default_sign_in_types():
+        return {
+        'mobile_otp_auth': False,
+        'email_otp_auth': False,
+        'email_mobile_otp_auth': False,
+        '2_email_otp_auth': False,
+        'web3_auth': False,
+        'oauth': False,
+        'authenticator_auth': False,
+        'email_authenticator_auth': False
+    }
+
+    
+
+
+    # App specific - Custom Fields
+    is_2fa_enabled = models.BooleanField(default=False)
+    is_mobile_verified = models.BooleanField(default=False)
+    mobile_otp = models.CharField(max_length=6, null=True, blank=True)
+    is_email_verified = models.BooleanField(default=False)
+    email_otp = models.CharField(max_length=6, null=True, blank=True)
+    web3_address = models.CharField(max_length=100, null=True, blank=True)
+    oauth_token = models.TextField(null=True, blank=True)
+    authenticator_secret = models.CharField(max_length=16, null=True, blank=True)
+    profile_picture = models.URLField(null=True, blank=True)
+    bio = models.TextField(null=True, blank=True)
+    sign_in_types_available = models.JSONField(default=default_sign_in_types)
+    links_to_social_profiles = models.ManyToManyField(
+        SocialMediaAccount,
+        blank=True,  # Allows for an empty list of profiles
+        related_name='linked_users',  # Optionally, you can set a related name
+    )
+
+

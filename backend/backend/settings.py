@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 
 from pathlib import Path
-from common.load_environment_variables import DJANGO_SECRET_KEY
+from common.load_environment_variables import *
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,7 +26,7 @@ SECRET_KEY = DJANGO_SECRET_KEY
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost','127.0.0.1','.pythonanywhere.com']
 
 
 # Application definition
@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'authentication',
     'chat',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -79,19 +80,29 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.dummy',  # Use a dummy database engine
-        'NAME': 'mydatabase',  # Replace with your database name
-        'USER': '',  # If applicable
-        'PASSWORD': '',  # If applicable
-        'HOST': 'localhost',  # Replace with your MongoDB host
-        'PORT': 27017,  # Replace with your MongoDB port
-    }
+        'ENGINE': 'django.db.backends.postgresql', 
+       'NAME': DATABASE,
+        'USER': DB_USER,  # Replace with your database username
+        'PASSWORD': DB_USER_PASSWORD,  # Replace with your database password
+        'HOST': DB_HOST,  # Replace with your database host if needed
+        'PORT': DB_PORT,  # Replace with your database port if needed
+    },
 }
 
-# MongoDB configuration
-MONGO_DB_NAME = 'mydatabase'  # Replace with your database name
-MONGO_HOST = 'localhost'  # Replace with your MongoDB host
-MONGO_PORT = 27017  # Replace with your MongoDB port
+
+
+
+
+
+
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ]
+}
+
 
 
 
@@ -119,7 +130,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Kolkata'
 
 USE_I18N = True
 
@@ -135,4 +146,4 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-AUTH_USER_MODEL = 'authentication.CustomerUser'
+AUTH_USER_MODEL = 'authentication.CustomUser'
